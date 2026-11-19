@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-anemo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Personal Portfolio | Teyvat Edition</title>
+
+    <!-- Google Fonts for Genshin UI Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="logo.png">
+</head>
+<body>
+
+    <!-- Canvas for Interactive Elemental Particles -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <h2 class="logo"><span class="icon">✦</span>MyPortFolio</h2>
+
+            <!-- Elemental Vision Switcher -->
+            <div class="element-switcher" title="Change Elemental Vision">
+                <span class="switcher-label">Vision:</span>
+                <button class="elem-btn active" data-element="anemo" title="Anemo (Teal)" aria-label="Anemo Vision">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c2.6 0 5 1.7 5.8 4.2.7 2.1-.1 4.5-2.1 6.2-.7.6-1.7 1.2-2.6 1.9-.8.6-1.5 1.3-2.1 2.2-.5.7-1.9 2.8-3.1 2.8-1.5 0-2.6-1.7-2.8-3.4-.3-2.8 2.4-4.9 4.8-6.2 1.5-1 2.6-2.3 3.1-4.1.3-1 .2-2.1.1-3.6zm1.4 8.5c1.2-.9 1.9-2.2 1.7-3.5-.5.4-1.4.8-2.1 1.1-.7.3-1.5.5-2.3.7.8 1 1.6 1.5 2.7 1.7z"/></svg>
+                </button>
+                <button class="elem-btn" data-element="pyro" title="Pyro (Red)" aria-label="Pyro Vision">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c2.2 1.7 3.5 4.1 3.5 6.7 0 3.1-2.1 5.1-3.5 6.8-1.3-1.7-3.5-3.7-3.5-6.8 0-2.6 1.3-5 3.5-6.7zm.2 8.7c1.1.4 2 1.2 2.5 2.4.7 1.8.3 4.1-1.4 5.5-1.7 1.3-4.2 1.5-6.1.6-1.2-.7-2.1-1.9-2.5-3.2-.7-2.6.8-5.2 3.3-6.4 1.4-.7 2.9-.9 4.2.1z"/></svg>
+                </button>
+                <button class="elem-btn" data-element="hydro" title="Hydro (Blue)" aria-label="Hydro Vision">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8c3.2 3.4 6.1 6.4 6.1 10.2 0 3.2-2.7 5.8-6.1 7.8-3.4-2-6.1-4.6-6.1-7.8 0-3.8 2.9-6.8 6.1-10.2zm0 4.2c-1.7 1.9-3.1 3.5-3.1 5.7 0 1.7 1.3 3.1 3.1 4.2 1.8-1.1 3.1-2.5 3.1-4.2 0-2.2-1.4-3.8-3.1-5.7z"/></svg>
+                </button>
+                <button class="elem-btn" data-element="electro" title="Electro (Purple)" aria-label="Electro Vision">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.9 2.5h-1.8L7 12.3h3.5L7.8 21.5l8.8-11.3h-3.8L16.2 2.5h-3.3z"/></svg>
+                </button>
+                <button class="elem-btn" data-element="geo" title="Geo (Gold)" aria-label="Geo Vision">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l7 4v7.5l-7 4-7-4V6.5l7-4zm0 3.1L7.5 7.5v5.8L12 16.4l4.5-2.9V7.5L12 5.6zm-1.5 2.4h3v3h3v3h-3v3h-3v-3h-3v-3h3v-3z"/></svg>
+                </button>
+                <button class="elem-btn" data-element="cryo" title="Cryo (Ice Blue)" aria-label="Cryo Vision">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8v4.1M12 17.1v4.1M4.8 12h4.1M15.1 12h4.1M7.1 7.1l2.9 2.9M14 14l2.9 2.9M17.2 7.1l-2.9 2.9M10 14l-2.9 2.9M12 7.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6z"/></svg>
+                </button>
+                <button class="elem-btn" data-element="dendro" title="Dendro (Green)" aria-label="Dendro Vision">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c2.8 2.4 4.3 5.4 4.3 8.3 0 2.7-1.3 5.1-3.5 7.4-2.2-2.3-3.5-4.7-3.5-7.4 0-2.9 1.5-5.9 3.7-8.3zm-2.1 10.3c1.2 1 2.1 2.1 2.3 3.6.2-1.6 1.1-2.7 2.2-3.6-1.1-.9-2-2-2.2-3.4-.1 1.4-1 2.4-2.3 3.4z"/></svg>
+                </button>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="Gallery.html">Gallery</a></li>
+                <li><a href="Login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <video class="hero-video" autoplay muted loop playsinline aria-label="Background video">
+            <source src="videoplayback.mp4" type="video/mp4">
+        </video>
+
+        <div class="hero-content">
+            <p class="greeting"><span class="star">✦</span> WELCOME TO MY DOMAIN <span class="star">✦</span></p>
+
+            <h1><span class="highlight">Welcome Traveler</span></h1>
+
+            <h3 class="subtitle">
+                <span class="diamond">◆</span> Quim Lester P. Cataluña | IT Student <span class="diamond">◆</span>
+            </h3>
+
+            <p class="hero-description">
+                Crafting clean, interactive, and visually captivating digital experiences across the web.
+            </p>
+
+            <a href="#projects" class="btn btn-genshin sound-trigger">
+                <span>Explore Quests</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <h2 class="section-title"><span class="title-ornament">✦</span> About Me <span class="title-ornament">✦</span></h2>
+            <div class="divider"></div>
+
+            <div class="genshin-panel about-panel">
+                <p>
+                    I am an Information Technology student passionate about web development, UI design, and 
+                    building intuitive user experiences. Like an adventurer forging new paths, my goal is to develop 
+                    innovative technology solutions and elegant digital interfaces.
+                </p>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section skills-section">
+            <h2 class="section-title"><span class="title-ornament">✦</span> Character Talents <span class="title-ornament">✦</span></h2>
+            <div class="divider"></div>
+
+            <div class="card-container">
+                <div class="card genshin-card inspectable sound-trigger" 
+                     data-title="Structure & Architecture"
+                     data-badge="HTML5"
+                     data-rarity="★★★★★"
+                     data-type="Talent / Markup"
+                     data-description="Mastery over standard HTML elements, accessibility standards, semantic tags, and document architecture for modern web applications."
+                     data-stat1="Semantics: 95%"
+                     data-stat2="SEO Structure: 90%">
+                    <div class="card-badge">HTML5</div>
+                    <h3>HTML</h3>
+                    <p>Constructing clean, semantic HTML architecture for web applications.</p>
+                    <span class="inspect-hint">Click to Inspect ✦</span>
+                </div>
+
+                <div class="card genshin-card inspectable sound-trigger" 
+                     data-title="Styling & Animation"
+                     data-badge="CSS3"
+                     data-rarity="★★★★★"
+                     data-type="Talent / Styling"
+                     data-description="Proficient in Flexbox, CSS Grid, keyframe animations, custom UI variables, dynamic theme engines, and responsive layouts."
+                     data-stat1="Animations: 92%"
+                     data-stat2="Responsive UI: 98%">
+                    <div class="card-badge">CSS3</div>
+                    <h3>CSS</h3>
+                    <p>Designing dynamic layouts, keyframe animations, and custom UI themes.</p>
+                    <span class="inspect-hint">Click to Inspect ✦</span>
+                </div>
+
+                <div class="card genshin-card inspectable sound-trigger" 
+                     data-title="Interactive UI Logic"
+                     data-badge="JS / ES6"
+                     data-rarity="★★★★★"
+                     data-type="Talent / Scripting"
+                     data-description="Building dynamic web features, DOM manipulation, Web Audio synthesis, interactive HTML5 canvas particle engines, and modal controllers."
+                     data-stat1="DOM Control: 90%"
+                     data-stat2="Audio/Canvas: 85%">
+                    <div class="card-badge">JavaScript</div>
+                    <h3>JavaScript</h3>
+                    <p>Building interactive components, canvas effects, and dynamic web logic.</p>
+                    <span class="inspect-hint">Click to Inspect ✦</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <h2 class="section-title"><span class="title-ornament">✦</span> Quest Log / Projects <span class="title-ornament">✦</span></h2>
+            <div class="divider"></div>
+
+            <div class="card-container">
+                <div class="card genshin-card project-card inspectable sound-trigger"
+                     data-title="Genshin Portfolio Suite"
+                     data-badge="Legendary Quest"
+                     data-rarity="★★★★★"
+                     data-type="Fullstack Web UI"
+                     data-description="An immersive web portfolio featuring elemental theme switching, Web Audio sound synthesis, 3D tilt interactions, and background video shaders."
+                     data-stat1="Design Rating: 100%"
+                     data-stat2="Interactivity: 98%">
+                    <span class="rarity">★★★★★</span>
+                    <h3>Personal Portfolio</h3>
+                    <p>An interactive portfolio featuring custom Genshin-inspired UI elements and background video.</p>
+                    <span class="inspect-hint">Click to Inspect ✦</span>
+                </div>
+
+                <div class="card genshin-card project-card inspectable sound-trigger"
+                     data-title="Akademiya Hub"
+                     data-badge="Major Quest"
+                     data-rarity="★★★★☆"
+                     data-type="Web Application"
+                     data-description="A multi-page educational web application providing course materials, scheduling tools, and interactive student portals."
+                     data-stat1="Usability: 94%"
+                     data-stat2="Structure: 90%">
+                    <span class="rarity">★★★★☆</span>
+                    <h3>School Website</h3>
+                    <p>A comprehensive web project displaying educational resources and student tools.</p>
+                    <span class="inspect-hint">Click to Inspect ✦</span>
+                </div>
+
+                <div class="card genshin-card project-card inspectable sound-trigger"
+                     data-title="Visual Effects Showcase"
+                     data-badge="Side Quest"
+                     data-rarity="★★★★☆"
+                     data-type="CSS & Canvas Lab"
+                     data-description="A dedicated lab demonstrating UI glow effects, glassmorphism panels, particles, and custom hardware-accelerated animations."
+                     data-stat1="Visual Appeal: 96%"
+                     data-stat2="Performance: 60 FPS">
+                    <span class="rarity">★★★★☆</span>
+                    <h3>Animation Project</h3>
+                    <p>A creative showcase highlighting smooth transitions, glow effects, and interactive UI states.</p>
+                    <span class="inspect-hint">Click to Inspect ✦</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section contact-section">
+            <h2 class="section-title"><span class="title-ornament">✦</span> Send a Dispatch <span class="title-ornament">✦</span></h2>
+            <div class="divider"></div>
+
+            <div class="genshin-panel contact-panel">
+                <p>Interested in collaborating or building something new? Feel free to reach out.</p>
+                <p class="email-text">Email: <span>kimlestercataluña@gmail.com</span></p>
+
+                <a href="mailto:kimlestercataluña@gmail.com" class="btn btn-genshin sound-trigger">
+                    <span>Send Me an Email</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Inspection Modal Window -->
+    <div id="inspection-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <button class="modal-close sound-trigger" id="modal-close-btn">&times;</button>
+            
+            <div class="modal-header">
+                <span id="modal-badge" class="modal-badge">Category</span>
+                <div id="modal-rarity" class="modal-rarity">★★★★★</div>
+                <h2 id="modal-title" class="modal-title">Item Title</h2>
+                <div id="modal-type" class="modal-type">Item Subtitle / Type</div>
+            </div>
+
+            <div class="modal-body">
+                <p id="modal-description">Detailed item description goes here...</p>
+                
+                <div class="modal-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Attribute 1</span>
+                        <span id="modal-stat1" class="stat-value">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Attribute 2</span>
+                        <span id="modal-stat2" class="stat-value">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-genshin modal-action sound-trigger" id="modal-confirm-btn">
+                    <span>Confirm Inspection</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-ornament">✦ ✦ ✦</div>
+        <p>&copy; 2026 Your Name. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Embedded JavaScript Engine -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const emailLink = document.querySelector('a[href^="mailto:"]');
+
+            if (emailLink) {
+                emailLink.addEventListener('click', (event) => {
+                    const proceed = window.confirm('Do you wish to proceed?');
+                    if (!proceed) {
+                        event.preventDefault();
+                    }
+                });
+            }
+            
+            /* 1. Web Audio API Synthesizer */
+            let audioCtx = null;
+            let audioEnabled = true;
+
+            function initAudio() {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) {
+                        audioCtx = new AudioContext();
+                    }
+                }
+            }
+
+            function playSound(freq = 523.25, type = 'sine', duration = 0.3) {
+                if (!audioEnabled) return;
+                initAudio();
+                if (!audioCtx) return;
+
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + duration);
+                } catch (e) {
+                    console.warn("Audio synthesis restricted:", e);
+                }
+            }
+
+            document.querySelectorAll('.sound-trigger, .elem-btn, .nav-links a').forEach(el => {
+                el.addEventListener('click', () => {
+                    playSound(659.25, 'triangle', 0.25);
+                });
+            });
+
+            /* 2. Interactive Canvas Particle Engine */
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas ? canvas.getContext('2d') : null;
+
+            let particles = [];
+            const particleCount = 45;
+            let currentElementColor = { r: 100, g: 229, b: 179 };
+
+            const elementColorMap = {
+                anemo: { r: 100, g: 229, b: 179 },
+                pyro: { r: 255, g: 107, b: 74 },
+                hydro: { r: 74, g: 197, b: 255 },
+                electro: { r: 199, g: 116, b: 255 },
+                geo: { r: 248, g: 201, b: 84 },
+                cryo: { r: 153, g: 241, b: 255 },
+                dendro: { r: 158, g: 230, b: 58 }
+            };
+
+            function resizeCanvas() {
+                if (!canvas) return;
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1;
+                    this.speedX = (Math.random() - 0.5) * 0.6;
+                    this.speedY = (Math.random() - 0.5) * 0.6 - 0.2;
+                    this.alpha = Math.random() * 0.7 + 0.2;
+                    this.pulse = Math.random() * 0.02 + 0.005;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+
+                    this.alpha += Math.sin(Date.now() * this.pulse) * 0.01;
+
+                    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                        this.reset();
+                    }
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${currentElementColor.r}, ${currentElementColor.g}, ${currentElementColor.b}, ${Math.max(0, this.alpha)})`;
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = `rgb(${currentElementColor.r}, ${currentElementColor.g}, ${currentElementColor.b})`;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            function initParticles() {
+                if (!canvas) return;
+                resizeCanvas();
+                particles = [];
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animateParticles() {
+                if (!ctx) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animateParticles);
+            }
+
+            if (canvas) {
+                window.addEventListener('resize', resizeCanvas);
+                initParticles();
+                animateParticles();
+            }
+
+            /* 3. Elemental Vision Switcher */
+            const switcherBtns = document.querySelectorAll('.elem-btn');
+            const htmlElement = document.documentElement;
+
+            switcherBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const elem = btn.getAttribute('data-element');
+                    
+                    htmlElement.className = '';
+                    htmlElement.classList.add(`theme-${elem}`);
+
+                    switcherBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    if (elementColorMap[elem]) {
+                        currentElementColor = elementColorMap[elem];
+                    }
+                });
+            });
+
+            /* 4. 3D Card Tilt Effects */
+            const cards = document.querySelectorAll('.genshin-card');
+
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = ((y - centerY) / centerY) * -10;
+                    const rotateY = ((x - centerX) / centerX) * 10;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+                });
+            });
+
+            /* 5. Inspection Modal Controller */
+            const modal = document.getElementById('inspection-modal');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+
+            const modalBadge = document.getElementById('modal-badge');
+            const modalRarity = document.getElementById('modal-rarity');
+            const modalTitle = document.getElementById('modal-title');
+            const modalType = document.getElementById('modal-type');
+            const modalDesc = document.getElementById('modal-description');
+            const modalStat1 = document.getElementById('modal-stat1');
+            const modalStat2 = document.getElementById('modal-stat2');
+
+            document.querySelectorAll('.inspectable').forEach(card => {
+                card.addEventListener('click', () => {
+                    const title = card.getAttribute('data-title') || 'Unknown Item';
+                    const badge = card.getAttribute('data-badge') || 'Talent';
+                    const rarity = card.getAttribute('data-rarity') || '★★★★★';
+                    const type = card.getAttribute('data-type') || 'Special Ability';
+                    const desc = card.getAttribute('data-description') || 'No additional records available.';
+                    const stat1 = card.getAttribute('data-stat1') || 'N/A';
+                    const stat2 = card.getAttribute('data-stat2') || 'N/A';
+
+                    modalTitle.textContent = title;
+                    modalBadge.textContent = badge;
+                    modalRarity.textContent = rarity;
+                    modalType.textContent = type;
+                    modalDesc.textContent = desc;
+                    modalStat1.textContent = stat1;
+                    modalStat2.textContent = stat2;
+
+                    modal.classList.remove('hidden');
+                });
+            });
+
+            function closeModal() {
+                modal.classList.add('hidden');
+            }
+
+            if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+            if (modalConfirmBtn) modalConfirmBtn.addEventListener('click', closeModal);
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
+            }
+
+            /* 6. ScrollSpy Active Link Highlighter */
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 150;
+                    if (window.scrollY >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+        });
+    </script>
+
+</body>
+</html>

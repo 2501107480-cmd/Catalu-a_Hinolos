@@ -1,0 +1,645 @@
+/* ==========================================================================
+   1. Genshin Impact Theme Variables & Vision Palettes
+   ========================================================================== */
+:root {
+    --primary-gold: #ece5d8;
+    --accent-gold: #d3bc8e;
+    --bright-gold: #f4d084;
+    --dark-gold: #a68a56;
+    --bg-dark: #0b0f19;
+    --panel-bg: rgba(18, 25, 41, 0.88);
+    --panel-border: rgba(211, 188, 142, 0.35);
+    --text-main: #deeaee;
+    --text-muted: #a3b3c2;
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Outfit', sans-serif;
+    
+    /* Dynamic Theme Defaults (Anemo) */
+    --element-color: #64e5b3;
+    --element-glow: rgba(100, 229, 179, 0.5);
+    --element-rgb: 100, 229, 179;
+}
+
+/* Vision Theme Overrides */
+html.theme-anemo {
+    --element-color: #64e5b3;
+    --element-glow: rgba(100, 229, 179, 0.5);
+    --element-rgb: 100, 229, 179;
+}
+
+html.theme-pyro {
+    --element-color: #ff6b4a;
+    --element-glow: rgba(255, 107, 74, 0.5);
+    --element-rgb: 255, 107, 74;
+}
+
+html.theme-hydro {
+    --element-color: #4ac5ff;
+    --element-glow: rgba(74, 197, 255, 0.5);
+    --element-rgb: 74, 197, 255;
+}
+
+html.theme-electro {
+    --element-color: #c774ff;
+    --element-glow: rgba(199, 116, 255, 0.5);
+    --element-rgb: 199, 116, 255;
+}
+
+html.theme-geo {
+    --element-color: #f8c954;
+    --element-glow: rgba(248, 201, 84, 0.5);
+    --element-rgb: 248, 201, 84;
+}
+
+html.theme-cryo {
+    --element-color: #99f1ff;
+    --element-glow: rgba(153, 241, 255, 0.5);
+    --element-rgb: 153, 241, 255;
+}
+
+html.theme-dendro {
+    --element-color: #9ee63a;
+    --element-glow: rgba(158, 230, 58, 0.5);
+    --element-rgb: 158, 230, 58;
+}
+
+/* ==========================================================================
+   2. Reset & Core Layout Styles
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Particle Canvas Overlay */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 15;
+}
+
+/* Custom Genshin Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--dark-gold);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--element-color);
+}
+
+/* ==========================================================================
+   3. Navigation Bar & Vision Switcher
+   ========================================================================== */
+header {
+    background: rgba(9, 13, 22, 0.92);
+    border-bottom: 1px solid var(--panel-border);
+    padding: 14px 8%;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    color: var(--primary-gold);
+    font-size: 24px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo .icon {
+    color: var(--element-color);
+    font-size: 18px;
+    transition: color 0.4s ease;
+}
+
+/* Vision Element Selector Bar */
+.element-switcher {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--panel-border);
+}
+
+.switcher-label {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    margin-right: 4px;
+}
+
+.elem-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(var(--element-rgb), 0.5);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    transition: transform 0.2s, background 0.3s, box-shadow 0.3s, border-color 0.3s;
+    opacity: 0.72;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.elem-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--element-color);
+    stroke: rgba(255,255,255,0.18);
+    stroke-width: 0.45;
+    filter: drop-shadow(0 0 6px var(--element-glow));
+}
+
+.elem-btn:hover {
+    transform: scale(1.2);
+    opacity: 1;
+    box-shadow: 0 0 12px var(--element-glow);
+}
+
+.elem-btn.active {
+    opacity: 1;
+    background: rgba(var(--element-rgb), 0.2);
+    border-color: rgba(var(--element-rgb), 0.9);
+    box-shadow: 0 0 14px var(--element-glow);
+    transform: scale(1.15);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+}
+
+.nav-links a {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-heading);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 0;
+    transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background: var(--element-color);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 0 10px var(--element-glow);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--element-color);
+    text-shadow: 0 0 10px var(--element-glow);
+    transform: translateY(-1px);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    transform: scaleX(1);
+}
+
+/* ==========================================================================
+   4. Hero Section & Background Video Controls
+   ========================================================================== */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 10% 60px;
+    overflow: hidden;
+    background-color: #000;
+}
+
+.hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    filter: brightness(0.55) saturate(1.15);
+}
+
+/* Vignette Overlay */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(11, 15, 25, 0.4) 0%, rgba(9, 13, 22, 0.88) 100%);
+    z-index: 1;
+}
+
+/* Floating HUD Controls */
+.video-controls {
+    position: absolute;
+    bottom: 25px;
+    right: 30px;
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+}
+
+.hud-btn {
+    background: rgba(18, 25, 41, 0.75);
+    border: 1px solid var(--panel-border);
+    color: var(--primary-gold);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+.hud-btn:hover {
+    border-color: var(--element-color);
+    box-shadow: 0 0 12px var(--element-glow);
+    transform: scale(1.1);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 750px;
+    text-align: center;
+}
+
+.greeting {
+    font-family: var(--font-heading);
+    color: var(--accent-gold);
+    letter-spacing: 3px;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.star {
+    color: var(--element-color);
+}
+
+.hero h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(38px, 6vw, 62px);
+    color: var(--primary-gold);
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.hero h1 .highlight {
+    color: var(--element-color);
+    text-shadow: 0 0 15px var(--element-glow);
+    transition: color 0.4s ease;
+}
+
+.subtitle {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    color: var(--accent-gold);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.diamond {
+    font-size: 12px;
+    vertical-align: middle;
+    color: var(--dark-gold);
+}
+
+.hero-description {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin: 0 auto 30px;
+    max-width: 580px;
+}
+
+/* Genshin UI Button */
+.btn-genshin {
+    position: relative;
+    display: inline-block;
+    padding: 12px 36px;
+    background: linear-gradient(180deg, #ece5d8 0%, #c4ab7a 100%);
+    color: #1c2436;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-radius: 25px;
+    border: 2px solid var(--bright-gold);
+    box-shadow: 0 0 15px rgba(212, 188, 142, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-genshin:hover {
+    background: linear-gradient(180deg, #ffffff 0%, #d3bc8e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px var(--element-glow);
+    border-color: var(--element-color);
+}
+
+/* ==========================================================================
+   4.5 Login Page (Genshin Inspired)
+   ========================================================================== */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #070b13;
+    color: var(--text-main);
+    position: relative;
+    overflow: hidden;
+}
+
+.video-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    overflow: hidden;
+    background: #000;
+    filter: brightness(0.52) saturate(1.15);
+}
+
+.login-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, rgba(6, 10, 18, 0.8), rgba(12, 17, 26, 0.55), rgba(9, 12, 18, 0.72));
+}
+
+.login-shell {
+    position: relative;
+    z-index: 2;
+    width: min(430px, 92vw);
+}
+
+.login-card {
+    background: rgba(13, 19, 31, 0.82);
+    border: 1px solid var(--panel-border);
+    border-radius: 18px;
+    padding: 30px 28px 24px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45), 0 0 28px rgba(100, 229, 179, 0.12);
+    backdrop-filter: blur(10px);
+}
+
+.login-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.login-badge {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--primary-gold);
+    text-transform: uppercase;
+    border: 1px solid var(--panel-border);
+    background: rgba(255,255,255,0.02);
+    border-radius: 999px;
+    padding: 8px 14px;
+}
+
+.login-vision {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.vision-pill {
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.04);
+    color: var(--element-color);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.vision-pill.active {
+    background: rgba(var(--element-rgb), 0.18);
+    border-color: rgba(var(--element-rgb), 0.9);
+    box-shadow: 0 0 12px var(--element-glow);
+}
+
+.login-card h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(28px, 4vw, 38px);
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--primary-gold);
+}
+
+.login-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+    font-size: 15px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    color: var(--accent-gold);
+    font-family: var(--font-heading);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(211, 188, 142, 0.35);
+    background: rgba(255,255,255,0.02);
+    color: var(--text-main);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.input-group input::placeholder {
+    color: rgba(163, 179, 194, 0.7);
+}
+
+.input-group input:focus {
+    border-color: rgba(var(--element-rgb), 0.9);
+    box-shadow: 0 0 0 3px rgba(var(--element-rgb), 0.12);
+}
+
+.login-button {
+    width: 100%;
+    border: none;
+    margin-top: 4px;
+}
+
+.signup,
+.back-home {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.signup a,
+.back-home a {
+    color: var(--element-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signup a:hover,
+.back-home a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   5. Main Content, Panels & 3D Interactive Cards
+   ========================================================================== */
+.main-content {
+    background: linear-gradient(180deg, #0b0f19 0%, #121929 50%, #0b0f19 100%);
+    position: relative;
+    z-index: 2;
+}
+
+.section {
+    padding: 85px 10%;
+    text-align: center;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 30px;
+    color: var(--primary-gold);
+    letter-spacing: 2px;
+}
+
+.title-ornament {
+    color: var(--element-color);
+    font-size: 20px;
+}
+
+.divider {
+    width: 140px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--element-color), transparent);
+    margin: 15px auto 45px;
+}
+
+/* Genshin Panel */
+.genshin-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+.genshin-panel p {
+    color: var(--text-main);
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+/* Cards Container & 3D Tilt */
+.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    perspective: 1000px;
+}
+
+.genshin-card {
+    position: relative;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 14
+}
