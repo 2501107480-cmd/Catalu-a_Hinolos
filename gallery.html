@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-anemo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | Teyvat Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="logo.png">
+</head>
+<body class="gallery-page">
+    <canvas id="particle-canvas"></canvas>
+
+    <header>
+        <nav class="navbar">
+            <h2 class="logo"><span class="icon">✦</span>MyPortFolio</h2>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#skills">Skills</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="Gallery.html" class="active" aria-current="page">Gallery</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="gallery-main">
+        <section class="gallery-hero">
+            <p class="greeting"><span class="star">✦</span> MEMORY ARCHIVE <span class="star">✦</span></p>
+            <h1>Traveler <span class="highlight">Gallery</span></h1>
+            <div class="divider"></div>
+
+            <form class="gallery-search" role="search" autocomplete="off">
+                <label for="gallery-search-input" class="gallery-search-label">Search the gallery</label>
+                <div class="gallery-search-control">
+                    <span class="search-icon" aria-hidden="true">⌕</span>
+                    <input id="gallery-search-input" type="search" placeholder="Search videos, effects, or themes..." aria-label="Search gallery">
+                    <button id="gallery-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
+                </div>
+            </form>
+
+            <div class="gallery-filter" aria-label="Gallery filters">
+                <button class="gallery-filter-btn active" type="button" data-filter="all">All</button>
+                <button class="gallery-filter-btn" type="button" data-filter="video">Videos</button>
+                <button class="gallery-filter-btn" type="button" data-filter="live-wallpaper">Live Wallpapers</button>
+            </div>
+        </section>
+
+        <section class="gallery-grid" id="gallery-grid" aria-live="polite">
+            <article class="gallery-item genshin-card" data-category="live-wallpaper video" data-search="columbina hyposelenia moon genshin live wallpaper anemo blue cinematic">
+                <button class="gallery-media sound-trigger" type="button" aria-label="Play Columbina live wallpaper">
+                    <video muted loop preload="metadata" playsinline>
+                        <source src="Columbina Hyposelenia - Memories of the Moon _ Genshin Impact _ Live Wallpaper 4K60.mp4" type="video/mp4">
+                    </video>
+                    <span class="gallery-play">▶</span>
+                </button>
+                <div class="gallery-card-info">
+                    <span class="gallery-category">Live Wallpaper</span>
+                    <h2>Memories of the Moon</h2>
+                    <p>Columbina-inspired cinematic live wallpaper.</p>
+                </div>
+            </article>
+
+            <article class="gallery-item genshin-card" data-category="video" data-search="portfolio background video genshin cinematic web adventure">
+                <button class="gallery-media sound-trigger" type="button" aria-label="Play portfolio background video">
+                    <video muted loop preload="metadata" playsinline>
+                        <source src="videoplayback.mp4" type="video/mp4">
+                    </video>
+                    <span class="gallery-play">▶</span>
+                </button>
+                <div class="gallery-card-info">
+                    <span class="gallery-category">Video</span>
+                    <h2>Portfolio Background</h2>
+                    <p>Atmospheric video used in the main portfolio experience.</p>
+                </div>
+            </article>
+        </section>
+
+        <p class="gallery-empty" id="gallery-empty" hidden>No memory records match your search.</p>
+    </main>
+
+    <footer>
+        <div class="footer-ornament">✦ ✦ ✦</div>
+        <p>&copy; 2026 Your Name. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('gallery-search-input');
+            const clearButton = document.getElementById('gallery-search-clear');
+            const filterButtons = document.querySelectorAll('.gallery-filter-btn');
+            const galleryItems = [...document.querySelectorAll('.gallery-item')];
+            const emptyMessage = document.getElementById('gallery-empty');
+            let activeFilter = 'all';
+
+            function filterGallery() {
+                const query = searchInput.value.trim().toLowerCase();
+                let visibleCount = 0;
+
+                galleryItems.forEach(item => {
+                    const categories = item.dataset.category || '';
+                    const searchableText = item.dataset.search || '';
+                    const matchesFilter = activeFilter === 'all' || categories.includes(activeFilter);
+                    const matchesSearch = !query || searchableText.includes(query);
+                    const visible = matchesFilter && matchesSearch;
+
+                    item.hidden = !visible;
+                    if (visible) visibleCount++;
+                });
+
+                clearButton.hidden = query.length === 0;
+                emptyMessage.hidden = visibleCount !== 0;
+            }
+
+            searchInput.addEventListener('input', filterGallery);
+
+            clearButton.addEventListener('click', () => {
+                searchInput.value = '';
+                searchInput.focus();
+                filterGallery();
+            });
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    activeFilter = button.dataset.filter;
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    filterGallery();
+                });
+            });
+
+            document.querySelectorAll('.gallery-media').forEach(media => {
+                const video = media.querySelector('video');
+                media.addEventListener('click', () => {
+                    if (video.paused) {
+                        document.querySelectorAll('.gallery-media video').forEach(otherVideo => {
+                            if (otherVideo !== video) otherVideo.pause();
+                        });
+                        video.play().catch(() => {});
+                        media.classList.add('playing');
+                    } else {
+                        video.pause();
+                        media.classList.remove('playing');
+                    }
+                });
+                video.addEventListener('ended', () => media.classList.remove('playing'));
+            });
+        });
+    </script>
+</body>
+</html>
